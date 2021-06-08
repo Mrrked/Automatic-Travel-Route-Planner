@@ -4,7 +4,6 @@ import { useState } from "react"
 
 export default function AutocompleteField({onPlaceChanged, value="", ...props}){
     const [autocomplete, setAutocomplete] = useState(null)
-    // const [value, setValue] = useState("")
     const [temp, setTemp] = useState(null)
 
     return <Autocomplete
@@ -31,8 +30,8 @@ export default function AutocompleteField({onPlaceChanged, value="", ...props}){
         <TextField 
             fullWidth 
             size="small"
-            variant="outlined"
-            value={temp ?? value}
+            // variant="outlined"
+            value={temp ?? value ?? ""}
             onChange={e => setTemp(e.target.value)}
             onBlur={_ => onPlaceChanged({
                 value: null,

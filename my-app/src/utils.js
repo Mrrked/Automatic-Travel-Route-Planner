@@ -1,0 +1,1 @@
+export const getValidLocations = (locations) => locations.filter(loc => loc.value)
