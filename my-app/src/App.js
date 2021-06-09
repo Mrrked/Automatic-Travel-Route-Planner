@@ -52,6 +52,7 @@ export default function App() {
           {...{ locations, setLocations, setRoute, handleGenerateRoute }}
         />
         <Map 
+          mapContainerStyle={{ flexGrow: 1 }}
           {...{ locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
         />
       </LoadScript>

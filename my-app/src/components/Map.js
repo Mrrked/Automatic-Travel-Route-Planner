@@ -3,7 +3,7 @@ import { DistanceMatrixService, GoogleMap, Marker } from "@react-google-maps/api
 import { getValidLocations } from "utils";
 import Directions from "components/Directions";
 
-export default function Map({ locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
+export default function Map({ mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
         lat: 14.599513,
@@ -27,7 +27,7 @@ export default function Map({ locations, matrix, setMatrix, route, fetchDistance
     }, [validLocations, map])
 
     return <GoogleMap
-        mapContainerStyle={{ flexGrow: 1 }}
+        mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={11}
         onLoad={map => setMap(map) }
@@ -54,9 +54,9 @@ export default function Map({ locations, matrix, setMatrix, route, fetchDistance
                 travelMode: "DRIVING"
             }}
             callback={resp => {
-                setFetchDistance(false)
+                setFetchDistance(false)                
                 setMatrix(resp.rows.map(row =>
-                    row.elements.map(element => element.distance.value)
+                    row.elements.map(element => element.distance?.value || 0)
                 ))
             }}
         />}
