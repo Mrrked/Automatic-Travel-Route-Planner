@@ -4,7 +4,6 @@ import { useState } from "react"
 
 export default function AutocompleteField({onPlaceChanged, value="", ...props}){
     const [autocomplete, setAutocomplete] = useState(null)
-    // const [value, setValue] = useState("")
     const [temp, setTemp] = useState(null)
 
     return <Autocomplete
@@ -12,15 +11,24 @@ export default function AutocompleteField({onPlaceChanged, value="", ...props}){
         onPlaceChanged={_ => {
             if (autocomplete !== null){
                 const place = autocomplete.getPlace()
-                onPlaceChanged?.({
-                    value: {
-                        lat: place.geometry.location.lat(),
-                        lng: place.geometry.location.lng(),
-                    },
-                    address: place.formatted_address.includes(place.name) ?
-                    place.formatted_address : `${place.name}, ${place.formatted_address}`,
-                    name: place.name
-                })
+
+                if (!place?.geometry) {
+                    onPlaceChanged?.({
+                        value: null,
+                        address: null,
+                        name: null
+                    })
+                } else {
+                    onPlaceChanged?.({
+                        value: {
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng(),
+                        },
+                        address: place.formatted_address.includes(place.name) ?
+                        place.formatted_address : `${place.name}, ${place.formatted_address}`,
+                        name: place.name
+                    })
+                }
                 setTemp(null)
             }
         }}
@@ -31,14 +39,20 @@ export default function AutocompleteField({onPlaceChanged, value="", ...props}){
         <TextField 
             fullWidth 
             size="small"
-            variant="outlined"
-            value={temp ?? value}
+            value={temp ?? value ?? ""}
             onChange={e => setTemp(e.target.value)}
-            onBlur={_ => onPlaceChanged({
-                value: null,
-                address: null,
-                name: null
-            })}
+            onBlur={_ => {
+                if (value){
+                    if (temp === "") {
+                        onPlaceChanged?.({
+                            value: null,
+                            address: null,
+                            name: null
+                        })
+                    }
+                    setTemp(null)
+                }
+            }}
             {...props}
         />
     </Autocomplete>
