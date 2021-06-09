@@ -55,7 +55,7 @@ export default function App() {
         libraries={libraries}
       >
         <Panel 
-          {...{ locations, setLocations, setRoute, handleGenerateRoute }}
+          {...{ locations, setLocations, route, setRoute, handleGenerateRoute, matrix }}
         />
         <Map 
           mapContainerStyle={{ flexGrow: 1 }}

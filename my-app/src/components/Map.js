@@ -59,9 +59,8 @@ export default function Map({ setError, mapContainerStyle, locations, matrix, se
 
                 if (resp.rows.some(row => row.elements.some(element => element.status !== "OK" )))
                     return setError("Unreachable location.")
-
                 setMatrix(resp.rows.map(row =>
-                    row.elements.map(element => element.distance.value)
+                    row.elements.map(element => element.duration.value)
                 ))
 
                 setError("")

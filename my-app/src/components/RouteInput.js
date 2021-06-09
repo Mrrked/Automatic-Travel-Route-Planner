@@ -13,16 +13,19 @@ import {
 import AutocompleteField from "components/AutocompleteField";
 import { getValidLocations } from "utils"
 
-export default function RouteInput({ locations, setLocations, setRoute, handleGenerateRoute }){
+export default function RouteInput({ route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
     const validLocations = getValidLocations(locations)
 
     return <>
-        <Box px={3} pt={1} flexGrow={1} flexShrink={1} overflow="scroll" display="flex" flexDirection="column">
+        <Box flexGrow={1} flexShrink={1} overflow="scroll" display="flex" flexDirection="column">
             <Box mb={2} display="flex" justifyContent="flex-end">
                 <Button
                     disabled={locations.some(loc => !loc.value)}
                     startIcon={<AddLocationIcon />}
-                    onClick={_ => setLocations(old => [...old, { id: uuid() }])}
+                    onClick={_ => {
+                        setLocations(old => [...old, { id: uuid() }])
+                        setRoute(null)
+                    }}
                 >
                     Add Location
                 </Button>
@@ -58,7 +61,7 @@ export default function RouteInput({ locations, setLocations, setRoute, handleGe
             </Box>
             )}
         </Box>
-        <Box p={3} display="flex" justifyContent="flex-end">
+        <Box display="flex" flexDirection="row-reverse" justifyContent="space-between">
             <Fab 
                 variant="extended" 
                 color="primary"
@@ -68,6 +71,13 @@ export default function RouteInput({ locations, setLocations, setRoute, handleGe
                 <FindRouteIcon style={{ marginRight: 10 }} />
                 Find Route
             </Fab>
+            {route && <Button 
+                size="small"
+                color="secondary"
+                onClick={handleViewRoute}
+            >
+                View Route
+            </Button>}
         </Box>
     </>
 }
