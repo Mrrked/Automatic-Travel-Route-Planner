@@ -14,13 +14,14 @@ import { libraries } from "config"
 import { getValidLocations } from "utils";
 import Map from "components/Map";
 import Panel from "components/Panel";
+import getRoute from "tsp"
 
 // eslint-disable-next-line
 const activated = "AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA"
 // eslint-disable-next-line
 const dummy = "AIzaSyDr-Sb2ICpI-9HRANMJBLIOEAzAHNNWjbk"
 
-const getRoute = (locations) => locations.map((loc, index) => index)  // insert algorithm
+// const getRoute = (locations) => locations.map((loc, index) => index)  // insert algorithm
 
 export default function App() {
   const [locations, setLocations] = useState([{ id: uuid() }, { id: uuid() } ])
@@ -35,7 +36,7 @@ export default function App() {
     if (!matrix) return
     if (validLocations.length < 2) return
     
-    const newRoute = getRoute(validLocations)
+    const newRoute = getRoute(matrix).path
 
     setRoute(newRoute)
     // eslint-disable-next-line
