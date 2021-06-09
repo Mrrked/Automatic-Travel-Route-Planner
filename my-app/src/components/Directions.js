@@ -2,7 +2,7 @@ import { DirectionsRenderer, DirectionsService } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 
 
-export default function Directions({ matrix, route, travelMode, waypoints=[] }){
+export default function Directions({ validLocations, matrix, route, travelMode, waypoints=[] }){
   const [fetchDirections, setFetchDirections] = useState(false)
   const [response, setResponse] = useState(null)
 
@@ -15,11 +15,11 @@ export default function Directions({ matrix, route, travelMode, waypoints=[] }){
   return route && <>
       {fetchDirections && <DirectionsService 
         options={{
-          origin: route?.[0].value,
-          destination: route?.[route.length - 1].value,
-          waypoints: route?.filter((loc, index) => index > 0 && index < route.length - 1)
-            .map(loc => {
-              return { location: loc.value }
+          origin: validLocations[route[0]].value,
+          destination: validLocations[route[route.length - 1]].value,
+          waypoints: route.filter((node, index) => index > 0 && index < route.length - 1)
+            .map(node => {
+              return { location: validLocations[node].value }
             }),
           travelMode,
         }}

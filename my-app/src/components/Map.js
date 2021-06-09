@@ -43,6 +43,7 @@ export default function Map({ setError, mapContainerStyle, locations, matrix, se
         <Directions 
             matrix={matrix}
             route={route}
+            validLocations={validLocations}
             travelMode="DRIVING"
         />
         {fetchDistance && 

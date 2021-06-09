@@ -22,6 +22,8 @@ const activated = "AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA"
 // eslint-disable-next-line
 const dummy = "AIzaSyDr-Sb2ICpI-9HRANMJBLIOEAzAHNNWjbk"
 
+const getRoute = (locations) => locations.map((loc, index) => index)  // insert algorithm
+
 export default function App() {
   const [locations, setLocations] = useState([{ id: uuid() }, { id: uuid() } ])
   const [fetchDistance, setFetchDistance] = useState(false)
@@ -35,7 +37,7 @@ export default function App() {
     if (!matrix) return
     if (validLocations.length < 2) return
     
-    const newRoute = validLocations // insert algorithm
+    const newRoute = getRoute(validLocations)
 
     setRoute(newRoute)
     // eslint-disable-next-line
@@ -43,6 +45,7 @@ export default function App() {
 
   
   const handleGenerateRoute = () => {
+    setRoute(null)
     setLocations(validLocations)
     setFetchDistance(true)
   } 
@@ -66,12 +69,12 @@ export default function App() {
     </Box>
     <Snackbar 
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      open={error}
+      open={Boolean(error)}
     >
       <Alert severity="error">
         Error: {error}
-        <IconButton size="small">
-          <ClearIcon fontSize="small" onClick={_ => setError("")} />
+        <IconButton size="small" onClick={_ => setError("")}>
+          <ClearIcon fontSize="small" />
         </IconButton>
       </Alert>
     </Snackbar>
