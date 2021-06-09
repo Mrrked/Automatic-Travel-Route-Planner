@@ -5,13 +5,11 @@ import {
   Box,
   IconButton,
   Snackbar,
-  Toolbar, 
 } from "@material-ui/core"
 import {
   Clear as ClearIcon
 } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
-import Header from "components/Header"
 import { libraries } from "config"
 import { getValidLocations } from "utils";
 import Map from "components/Map";
@@ -51,8 +49,6 @@ export default function App() {
   } 
 
   return <div style={{ height: "100%", display: "flex", flexDirection: "column"}}>
-    <Header />
-    <Toolbar/>
     <Box display="flex" height="100%">
       <LoadScript
         googleMapsApiKey={activated}
