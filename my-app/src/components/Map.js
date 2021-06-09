@@ -3,7 +3,7 @@ import { DistanceMatrixService, GoogleMap, Marker } from "@react-google-maps/api
 import { getValidLocations } from "utils";
 import Directions from "components/Directions";
 
-export default function Map({ mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
+export default function Map({ setError, mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
         lat: 14.599513,
@@ -54,10 +54,16 @@ export default function Map({ mapContainerStyle, locations, matrix, setMatrix, r
                 travelMode: "DRIVING"
             }}
             callback={resp => {
-                setFetchDistance(false)                
+                setFetchDistance(false)   
+
+                if (resp.rows.some(row => row.elements.some(element => element.status !== "OK" )))
+                    return setError("Unreachable location.")
+
                 setMatrix(resp.rows.map(row =>
-                    row.elements.map(element => element.distance?.value || 0)
+                    row.elements.map(element => element.distance.value)
                 ))
+
+                setError("")
             }}
         />}
     </GoogleMap>

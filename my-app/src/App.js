@@ -3,8 +3,14 @@ import { useEffect, useState } from "react";
 import { LoadScript } from "@react-google-maps/api";
 import {
   Box,
+  IconButton,
+  Snackbar,
   Toolbar, 
 } from "@material-ui/core"
+import {
+  Clear as ClearIcon
+} from "@material-ui/icons"
+import { Alert } from "@material-ui/lab"
 import Header from "components/Header"
 import { libraries } from "config"
 import { getValidLocations } from "utils";
@@ -21,6 +27,7 @@ export default function App() {
   const [fetchDistance, setFetchDistance] = useState(false)
   const [matrix, setMatrix] = useState(null)
   const [route, setRoute] = useState(null)
+  const [error, setError] = useState("")
 
   const validLocations = getValidLocations(locations)
   
@@ -53,9 +60,20 @@ export default function App() {
         />
         <Map 
           mapContainerStyle={{ flexGrow: 1 }}
-          {...{ locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
+          {...{ setError, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
         />
       </LoadScript>
     </Box>
+    <Snackbar 
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      open={error}
+    >
+      <Alert severity="error">
+        Error: {error}
+        <IconButton size="small">
+          <ClearIcon fontSize="small" onClick={_ => setError("")} />
+        </IconButton>
+      </Alert>
+    </Snackbar>
   </div>
 }
