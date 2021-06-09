@@ -4,8 +4,8 @@ import {
     Typography, 
 } from "@material-ui/core"
 
-export default function Header(){
-    return <AppBar>
+export default function Header(props){
+    return <AppBar {...props}>
       <Toolbar>
         <Typography variant="h6" color="inherit">
           Travel Route Planner
