@@ -95,7 +95,7 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
                             key={loc.id}
                             value={loc.id}
                         >
-                            {loc.name} {loc.id === locations[0].id && "(Start)"}
+                            {loc.id === locations[0].id && "(Start)"} {loc.address} 
                         </MenuItem>
                         )}
                     </Select>
