@@ -11,7 +11,7 @@ import RouteInput from "components/RouteInput"
 import { useEffect, useState } from "react"
 import RouteDisplay from "./RouteDisplay"
 
-export default function Panel({ locations, matrix, setLocations, route, setRoute, handleGenerateRoute }){
+export default function Panel({ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, matrix, setLocations, route, setRoute, handleGenerateRoute }){
     const [view, setView] = useState("ROUTE_INPUT")
 
     useEffect(_ => {
@@ -24,7 +24,7 @@ export default function Panel({ locations, matrix, setLocations, route, setRoute
                 Travel Route Planner
             </Typography>
         </Box>
-        <Box display="flex" flexDirection="column" flexGrow={1} px={3} py={1}>
+        <Box display="flex" flexDirection="column" overflow="scroll" flexGrow={1} px={3} py={1}>
             {view !== "ROUTE_INPUT" &&
                 <Box display="flex" mb={2}>
                     <Button
@@ -38,7 +38,7 @@ export default function Panel({ locations, matrix, setLocations, route, setRoute
             }
             {view === "ROUTE_INPUT" 
             ? <RouteInput 
-                {...{ locations, setLocations, route, setRoute, handleGenerateRoute }} 
+                {...{ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute }} 
                 handleViewRoute={_ => setView("ROUTE_DISPLAY")}
             />
             : view === "ROUTE_DISPLAY"

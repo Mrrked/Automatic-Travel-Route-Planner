@@ -1,4 +1,4 @@
-export default function getRoute(graph) {
+export default function endOnStart(graph) {
     //DECLARATION & INITIALIZATION OF NECESSARY INPUTS-----------------------------------------------
 
     
@@ -80,7 +80,7 @@ export default function getRoute(graph) {
 
     return {
         path: [...smallest_path, smallest_path[0]],
-        totalWeight: ans 
+        total: ans 
     }
 
 }
