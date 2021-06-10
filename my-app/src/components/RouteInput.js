@@ -3,7 +3,12 @@ import {
     Box,
     Button,
     Fab,
+    FormControl,
+    FormHelperText,
     IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
   } from "@material-ui/core"
 import {
     Add as AddLocationIcon,
@@ -12,9 +17,14 @@ import {
 } from "@material-ui/icons"
 import AutocompleteField from "components/AutocompleteField";
 import { getValidLocations } from "utils"
+import { useEffect } from "react";
 
-export default function RouteInput({ route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
+export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
     const validLocations = getValidLocations(locations)
+
+    useEffect(_ => {
+        if (validLocations.findIndex(loc => loc.id === end) === -1) setEnd("ANY")
+    }, [validLocations, end, setEnd])
 
     return <>
         <Box flexGrow={1} flexShrink={1} overflow="scroll" display="flex" flexDirection="column">
@@ -38,14 +48,17 @@ export default function RouteInput({ route, handleViewRoute, locations, setLocat
                 alignItems="center"
                 justifyContent="space-between"
             >
-                <Box width={220} mr={1}>
+                <Box width={250} mr={1}>
                     <AutocompleteField
-                    label={index === 0 ? "Start" : `Destination ${index}`}
-                    onPlaceChanged={newLoc => setLocations(old => {
-                        setRoute(null)
-                        return old.map(loc => loc.id === location.id ? { ...loc, ...newLoc } : loc)
-                    })}
-                    value={location?.address}
+                        error={noStart && index === 0}
+                        helperText={noStart && index === 0 && "Required"}
+                        label={index === 0 ? "Start" : `Destination ${index}`}
+                        onPlaceChanged={newLoc => setLocations(old => {
+                            if (index === 0) setNoStart(false)
+                            setRoute(null)
+                            return old.map(loc => loc.id === location.id ? { ...loc, ...newLoc } : loc)
+                        })}
+                        value={location?.address}
                     />
                 </Box>
                     {index > 0 && <IconButton 
@@ -60,6 +73,39 @@ export default function RouteInput({ route, handleViewRoute, locations, setLocat
                     </IconButton>}
             </Box>
             )}
+            <Box mb={2} width={250}>
+                <FormControl 
+                    fullWidth
+                    size="small"
+                    error={noEnd}
+                >
+                    <InputLabel>End</InputLabel>
+                    <Select 
+                        label="End"
+                        disabled={validLocations.length === 0}
+                        value={end}
+                        onChange={e => {
+                            setEnd(e.target.value)
+                            setRoute(null)
+                            setNoEnd(false)
+                        }}
+                    >
+                        <MenuItem value="ANY">
+                            Any
+                        </MenuItem>
+                        {validLocations.map((loc) => 
+                        <MenuItem
+                            key={loc.id}
+                            value={loc.id}
+                        >
+                            {loc.id === locations[0].id && "(Round trip)"} {loc.address} 
+                        </MenuItem>
+                        )}
+                    </Select>
+                    <FormHelperText>{noEnd && "Required"}</FormHelperText>
+                </FormControl>
+                    
+            </Box>
         </Box>
         <Box display="flex" flexDirection="row-reverse" justifyContent="space-between">
             <Fab 
