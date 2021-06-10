@@ -42,6 +42,18 @@ export default function App() {
     // eslint-disable-next-line
   }, [matrix])
 
+  const handleAddLocation = (newLoc = {}) => {
+    const emptyLoc = locations.find(loc => !loc.value)
+
+    if (emptyLoc) 
+      setLocations(old => old.map(loc => 
+        loc.id === emptyLoc.id ? { id: loc.id, ...newLoc }
+        : loc
+      ))
+    else
+      setLocations(old => [...old, { ...newLoc, id: uuid() }])
+    setRoute(null)
+  }
   
   const handleGenerateRoute = () => {
     const newNoStart = !locations?.[0].value
@@ -64,11 +76,11 @@ export default function App() {
         libraries={libraries}
       >
         <Panel 
-          {...{ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute, matrix }}
+          {...{ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute, matrix }}
         />
         <Map 
           mapContainerStyle={{ flexGrow: 1 }}
-          {...{ setError, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
+          {...{ handleAddLocation, setError, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
         />
       </LoadScript>
     </Box>

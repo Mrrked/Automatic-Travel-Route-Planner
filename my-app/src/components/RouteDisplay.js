@@ -32,11 +32,16 @@ export default function RouteDisplay({ route, locations, matrix }){
                                 {(index + 10).toString(36).toUpperCase()}
                             </Typography>
                         </Box>
-                        {/* <TimelineDot color="secondary" /> */}
                         {index < route.length - 1 && <TimelineConnector />}
                     </TimelineSeparator>
                     <TimelineContent>
-                        {validLocations[node].name}
+                        {function(){
+                            let label = validLocations[node].name || validLocations[node].address
+                            
+                            if (label.length > 30) label = `${label.substring(0, 30)}...`
+                            return label
+                        }()}
+                        {/* {(validLocations[node].name || validLocations[node].address)} */}
                     </TimelineContent>
                 </TimelineItem>
             )}

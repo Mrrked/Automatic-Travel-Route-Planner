@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid"
 import {
     Box,
     Button,
@@ -19,7 +18,7 @@ import AutocompleteField from "components/AutocompleteField";
 import { getValidLocations } from "utils"
 import { useEffect } from "react";
 
-export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
+export default function RouteInput({ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
     const validLocations = getValidLocations(locations)
 
     useEffect(_ => {
@@ -33,8 +32,7 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
                     disabled={locations.some(loc => !loc.value)}
                     startIcon={<AddLocationIcon />}
                     onClick={_ => {
-                        setLocations(old => [...old, { id: uuid() }])
-                        setRoute(null)
+                        handleAddLocation()
                     }}
                 >
                     Add Location
