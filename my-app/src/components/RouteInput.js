@@ -23,7 +23,7 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
     const validLocations = getValidLocations(locations)
 
     useEffect(_ => {
-        if (validLocations.findIndex(loc => loc.id === end) === -1) setEnd("")
+        if (validLocations.findIndex(loc => loc.id === end) === -1) setEnd("ANY")
     }, [validLocations, end, setEnd])
 
     return <>
@@ -48,7 +48,7 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
                 alignItems="center"
                 justifyContent="space-between"
             >
-                <Box width={220} mr={1}>
+                <Box width={250} mr={1}>
                     <AutocompleteField
                         error={noStart && index === 0}
                         helperText={noStart && index === 0 && "Required"}
@@ -73,7 +73,7 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
                     </IconButton>}
             </Box>
             )}
-            <Box mb={2} width={220}>
+            <Box mb={2} width={250}>
                 <FormControl 
                     fullWidth
                     size="small"
@@ -90,12 +90,15 @@ export default function RouteInput({ noStart, setNoStart, noEnd, setNoEnd, end, 
                             setNoEnd(false)
                         }}
                     >
+                        <MenuItem value="ANY">
+                            Any
+                        </MenuItem>
                         {validLocations.map((loc) => 
                         <MenuItem
                             key={loc.id}
                             value={loc.id}
                         >
-                            {loc.id === locations[0].id && "(Start)"} {loc.address} 
+                            {loc.id === locations[0].id && "(Round trip)"} {loc.address} 
                         </MenuItem>
                         )}
                     </Select>

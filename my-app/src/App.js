@@ -7,7 +7,7 @@ import {
   Snackbar,
 } from "@material-ui/core"
 import {
-  Clear as ClearIcon
+  Clear as ClearIcon,
 } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
 import { libraries } from "config"
@@ -21,13 +21,11 @@ const activated = "AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA"
 // eslint-disable-next-line
 const dummy = "AIzaSyDr-Sb2ICpI-9HRANMJBLIOEAzAHNNWjbk"
 
-// const getRoute = (locations) => locations.map((loc, index) => index)  // insert algorithm
-
 export default function App() {
   const [locations, setLocations] = useState([{ id: uuid() }, { id: uuid() } ])
   const [fetchDistance, setFetchDistance] = useState(false)
   const [matrix, setMatrix] = useState(null)
-  const [end, setEnd] = useState("")
+  const [end, setEnd] = useState("ANY")
   const [route, setRoute] = useState(null)
   const [error, setError] = useState("")
   const [noStart, setNoStart] = useState(false)
@@ -40,14 +38,7 @@ export default function App() {
     if (validLocations.length < 2) return
 
     const endIndex = validLocations.findIndex(loc => loc.id === end)
-
-    if (endIndex === -1) return
-
-    const newRoute = endIndex === 0 ? tsp.endOnStart(matrix).path
-    : endIndex < validLocations.length ? tsp.endOnNode(matrix, endIndex).path
-    : null
-
-    setRoute(newRoute)
+    setRoute(tsp.getRoute(matrix, endIndex).path)
     // eslint-disable-next-line
   }, [matrix])
 

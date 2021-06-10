@@ -5,7 +5,7 @@ import {
     Typography,
 } from "@material-ui/core"
 import {
-    ArrowBackIos as BackIcon
+    ArrowBack as BackIcon
 } from "@material-ui/icons"
 import RouteInput from "components/RouteInput"
 import { useEffect, useState } from "react"
@@ -30,8 +30,8 @@ export default function Panel({ noStart, setNoStart, noEnd, setNoEnd, end, setEn
                     <Button
                         onClick={_ => setView("ROUTE_INPUT")}
                         size="small"
+                        startIcon={<BackIcon/>}
                     >
-                        <BackIcon fontSize="small" />
                         Back
                     </Button>
                 </Box>
