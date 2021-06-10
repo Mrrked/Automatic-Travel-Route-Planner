@@ -11,11 +11,12 @@ import RouteInput from "components/RouteInput"
 import { useEffect, useState } from "react"
 import RouteDisplay from "./RouteDisplay"
 
-export default function Panel({ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, matrix, setLocations, route, setRoute, handleGenerateRoute }){
+export default function Panel({ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, matrix, setLocations, route, setRoute, handleGenerateRoute }){
     const [view, setView] = useState("ROUTE_INPUT")
 
     useEffect(_ => {
         if (route) setView("ROUTE_DISPLAY")
+        else setView("ROUTE_INPUT")
     }, [route])
 
     return <Box zIndex={1} boxShadow={2} width={350} display="flex" flexDirection="column" alignSelf="stretch" component={Paper}>
@@ -38,7 +39,7 @@ export default function Panel({ noStart, setNoStart, noEnd, setNoEnd, end, setEn
             }
             {view === "ROUTE_INPUT" 
             ? <RouteInput 
-                {...{ noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute }} 
+                {...{ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute }} 
                 handleViewRoute={_ => setView("ROUTE_DISPLAY")}
             />
             : view === "ROUTE_DISPLAY"
