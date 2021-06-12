@@ -1,12 +1,14 @@
 import { Box, Typography } from "@material-ui/core";
 import { Timeline, TimelineConnector, TimelineContent, TimelineItem, TimelineOppositeContent, TimelineSeparator } from "@material-ui/lab";
-import { formatDuration, getValidLocations } from "utils";
+import { MainContext } from "providers/Main";
+import { useContext } from "react";
+import { formatDuration } from "utils";
 
-export default function RouteDisplay({ route, locations, matrix }){
-    const validLocations = getValidLocations(locations)
+export default function RouteDisplay(){
+    const { route, matrix, validLocations } = useContext(MainContext)
     const durations = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node])
     const totalDuration = durations?.reduce((acc, curr) => acc + curr)
-
+    
     return <Box>
         <Typography><strong>Travel Time:</strong> {formatDuration(totalDuration)}</Typography>
         <Timeline>
@@ -41,7 +43,6 @@ export default function RouteDisplay({ route, locations, matrix }){
                             if (label.length > 30) label = `${label.substring(0, 30)}...`
                             return label
                         }()}
-                        {/* {(validLocations[node].name || validLocations[node].address)} */}
                     </TimelineContent>
                 </TimelineItem>
             )}

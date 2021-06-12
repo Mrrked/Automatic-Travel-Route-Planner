@@ -1,4 +1,4 @@
-export function getRoute(graph, endPos=0){
+export function getRoute(graph, endPos=0, labels){
     //DECLARATION & INITIALIZATION OF NECESSARY INPUTS-----------------------------------------------
 
     const n = graph.length;                              //Required Input: # of nodes/locations
@@ -129,7 +129,7 @@ export function getRoute(graph, endPos=0){
     //OUTPUT-------------------------------------------------------------
 
     return {
-        path: smallest_path,
+        path: labels ? smallest_path.map(index => labels[index]) : smallest_path,
         total: ans
     }
 }

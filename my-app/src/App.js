@@ -15,6 +15,7 @@ import { getValidLocations } from "utils";
 import Map from "components/Map";
 import Panel from "components/Panel";
 import * as tsp from "tsp/index"
+import { MainContext } from "providers/Main";
 
 // eslint-disable-next-line
 const activated = "AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA"
@@ -27,7 +28,6 @@ export default function App() {
   const [matrix, setMatrix] = useState(null)
   const [end, setEnd] = useState("ANY")
   const [route, setRoute] = useState(null)
-  // const [error, setError] = useState("")
   const [notification, setNotification] = useState({ text: "", severity: "info" })
   const [noStart, setNoStart] = useState(false)
   const [noEnd, setNoEnd] = useState(false)
@@ -39,9 +39,19 @@ export default function App() {
     if (validLocations.length < 2) return
 
     const endIndex = validLocations.findIndex(loc => loc.id === end)
+
+    // console.log(tsp.getRoute(matrix, endIndex, validLocations.map(loc => loc.address)).path)
     setRoute(tsp.getRoute(matrix, endIndex).path)
     // eslint-disable-next-line
   }, [matrix])
+
+  const handleEditLocation = (id, updates={}) => {
+    const location = locations.find(loc => loc.id === id)
+    if (!location) return
+
+    if (route) setRoute(null)
+    setLocations(old => old.map(loc => loc.id === id ? { ...loc, ...updates } : loc ))
+  }
 
   const handleAddLocation = (newLoc = {}) => {
     const emptyLoc = locations.find(loc => !loc.value)
@@ -53,8 +63,9 @@ export default function App() {
         loc.id === emptyLoc.id ? { id: loc.id, ...newLoc }
         : loc
       ))
-    else
+    else {
       setLocations(old => [...old, { ...newLoc, id: uuid() }])
+    }
     setRoute(null)
   }
   
@@ -72,19 +83,28 @@ export default function App() {
     setFetchDistance(true)
   } 
 
-  return <div style={{ height: "100%", display: "flex", flexDirection: "column"}}>
+  return <MainContext.Provider 
+    value={{
+      locations, setLocations,
+      fetchDistance, setFetchDistance,
+      matrix, setMatrix,
+      end, setEnd,
+      route, setRoute,
+      notification, setNotification,
+      noStart, setNoStart,
+      noEnd, setNoEnd,
+      handleAddLocation, handleEditLocation, handleGenerateRoute,
+      validLocations
+    }}
+  >
+  <div style={{ height: "100%", display: "flex", flexDirection: "column"}}>
     <Box display="flex" height="100%">
       <LoadScript
         googleMapsApiKey={activated}
         libraries={libraries}
       >
-        <Panel 
-          {...{ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute, matrix }}
-        />
-        <Map 
-          mapContainerStyle={{ flexGrow: 1 }}
-          {...{ handleAddLocation, setNotification, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
-        />
+        <Panel/>
+        <Map mapContainerStyle={{ flexGrow: 1 }}/>
       </LoadScript>
     </Box>
     <Snackbar 
@@ -99,4 +119,5 @@ export default function App() {
       </Alert>
     </Snackbar>
   </div>
+  </MainContext.Provider>
 }

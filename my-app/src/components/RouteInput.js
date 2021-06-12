@@ -15,15 +15,25 @@ import {
     SearchOutlined as FindRouteIcon
 } from "@material-ui/icons"
 import AutocompleteField from "components/AutocompleteField";
-import { getValidLocations } from "utils"
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { MainContext } from "providers/Main";
 
-export default function RouteInput({ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, route, handleViewRoute, locations, setLocations, setRoute, handleGenerateRoute }){
-    const validLocations = getValidLocations(locations)
+export default function RouteInput(){
+    const { 
+        handleAddLocation, handleEditLocation, 
+        noStart, 
+        noEnd, setNoEnd, 
+        end, setEnd, 
+        route, handleViewRoute, 
+        locations, setLocations, 
+        setRoute, handleGenerateRoute,
+        validLocations
+    } = useContext(MainContext)
 
     useEffect(_ => {
         if (validLocations.findIndex(loc => loc.id === end) === -1) setEnd("ANY")
     }, [validLocations, end, setEnd])
+
 
     return <>
         <Box flexGrow={1} flexShrink={1} overflow="scroll" display="flex" flexDirection="column">
@@ -51,11 +61,7 @@ export default function RouteInput({ handleAddLocation, noStart, setNoStart, noE
                         error={noStart && index === 0}
                         helperText={noStart && index === 0 && "Required"}
                         label={index === 0 ? "Start" : `Destination ${index}`}
-                        onPlaceChanged={newLoc => setLocations(old => {
-                            if (index === 0) setNoStart(false)
-                            setRoute(null)
-                            return old.map(loc => loc.id === location.id ? { ...loc, ...newLoc } : loc)
-                        })}
+                        onPlaceChanged={newLoc => handleEditLocation(location.id, newLoc)}
                         value={location?.address}
                     />
                 </Box>

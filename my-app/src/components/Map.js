@@ -1,19 +1,28 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { DistanceMatrixService, GoogleMap, Marker } from "@react-google-maps/api";
-import { getValidLocations } from "utils";
 import Directions from "components/Directions";
 import Geocode from "react-geocode"
+import { MainContext } from "providers/Main";
 
 Geocode.setApiKey("AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA")
 
-export default function Map({ handleAddLocation, setNotification, mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
+export default function Map({ mapContainerStyle }){
+    const { 
+        handleAddLocation, 
+        setNotification, 
+        locations, 
+        matrix, 
+        setMatrix, 
+        route,
+        fetchDistance,
+        setFetchDistance,
+        validLocations
+    } = useContext(MainContext)
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
         lat: 14.599513,
         lng: 120.984222
     })
-
-    const validLocations = getValidLocations(locations)
 
     useEffect(_ => {
         if (validLocations.length === 0) return

@@ -8,11 +8,13 @@ import {
     ArrowBack as BackIcon
 } from "@material-ui/icons"
 import RouteInput from "components/RouteInput"
-import { useEffect, useState } from "react"
+import { MainContext } from "providers/Main"
+import { useContext, useEffect, useState } from "react"
 import RouteDisplay from "./RouteDisplay"
 
-export default function Panel({ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, matrix, setLocations, route, setRoute, handleGenerateRoute }){
+export default function Panel(){
     const [view, setView] = useState("ROUTE_INPUT")
+    const { route } = useContext(MainContext)
 
     useEffect(_ => {
         if (route) setView("ROUTE_DISPLAY")
@@ -38,12 +40,9 @@ export default function Panel({ handleAddLocation, noStart, setNoStart, noEnd, s
                 </Box>
             }
             {view === "ROUTE_INPUT" 
-            ? <RouteInput 
-                {...{ handleAddLocation, noStart, setNoStart, noEnd, setNoEnd, end, setEnd, locations, setLocations, route, setRoute, handleGenerateRoute }} 
-                handleViewRoute={_ => setView("ROUTE_DISPLAY")}
-            />
+            ? <RouteInput handleViewRoute={_ => setView("ROUTE_DISPLAY")} />
             : view === "ROUTE_DISPLAY"
-            ? <RouteDisplay {...{route, locations, matrix}} />
+            ? <RouteDisplay/>
             : null}
 
         </Box>
