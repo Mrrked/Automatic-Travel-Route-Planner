@@ -6,7 +6,7 @@ import Geocode from "react-geocode"
 
 Geocode.setApiKey("AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA")
 
-export default function Map({ handleAddLocation, setError, mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
+export default function Map({ handleAddLocation, setNotification, mapContainerStyle, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }){
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
         lat: 14.599513,
@@ -64,20 +64,18 @@ export default function Map({ handleAddLocation, setError, mapContainerStyle, lo
         <DistanceMatrixService
             key="distance_matrix" 
             options={{
-                origins: validLocations.map(loc => loc.value),
-                destinations: validLocations.map(loc => loc.value),
-                travelMode: "DRIVING"
-            }}
+                    travelMode: "DRIVING",
+                    origins: validLocations.map(loc => loc.value),
+                    destinations: validLocations.map(loc => loc.value),
+                }}
             callback={resp => {
                 setFetchDistance(false)   
-                if (!resp) return setError("Something went wrong.")
+                if (!resp) return setNotification({text: "Something went wrong.", severity: "error"})
                 if (resp.rows.some(row => row.elements.some(element => element.status !== "OK" )))
-                    return setError("Unreachable location.")
+                    return setNotification({text: "Unreachable location.", severity: "error"})
                 setMatrix(resp.rows.map(row =>
                     row.elements.map(element => element.duration.value)
                 ))
-
-                setError("")
             }}
         />}
     </GoogleMap>

@@ -27,7 +27,8 @@ export default function App() {
   const [matrix, setMatrix] = useState(null)
   const [end, setEnd] = useState("ANY")
   const [route, setRoute] = useState(null)
-  const [error, setError] = useState("")
+  // const [error, setError] = useState("")
+  const [notification, setNotification] = useState({ text: "", severity: "info" })
   const [noStart, setNoStart] = useState(false)
   const [noEnd, setNoEnd] = useState(false)
 
@@ -44,6 +45,8 @@ export default function App() {
 
   const handleAddLocation = (newLoc = {}) => {
     const emptyLoc = locations.find(loc => !loc.value)
+    
+    if (locations.length >= 10 && !emptyLoc) return setNotification({ text: "You can only have up to 10 locations.", severity: "warning" })
 
     if (emptyLoc) 
       setLocations(old => old.map(loc => 
@@ -80,17 +83,17 @@ export default function App() {
         />
         <Map 
           mapContainerStyle={{ flexGrow: 1 }}
-          {...{ handleAddLocation, setError, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
+          {...{ handleAddLocation, setNotification, locations, matrix, setMatrix, route, fetchDistance, setFetchDistance }}
         />
       </LoadScript>
     </Box>
     <Snackbar 
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      open={Boolean(error)}
+      open={Boolean(notification.text)}
     >
-      <Alert severity="error">
-        Error: {error}
-        <IconButton size="small" onClick={_ => setError("")}>
+      <Alert severity={notification.severity}>
+        {notification.text}
+        <IconButton size="small" onClick={_ => setNotification({ text: "", severity: " info" })}>
           <ClearIcon fontSize="small" />
         </IconButton>
       </Alert>
