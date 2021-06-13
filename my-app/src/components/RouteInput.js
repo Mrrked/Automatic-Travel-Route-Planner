@@ -24,9 +24,9 @@ export default function RouteInput({ handleViewRoute }){
         noStart, 
         noEnd, setNoEnd, 
         end, setEnd, 
-        route, 
+        route, setRoute,
         locations, setLocations, 
-        setRoute, handleGenerateRoute,
+        handleGenerateRoute,
         validLocations
     } = useContext(MainContext)
 
@@ -37,7 +37,19 @@ export default function RouteInput({ handleViewRoute }){
 
     return <>
         <Box flexGrow={1} flexShrink={1} overflow="scroll" display="flex" flexDirection="column">
-            <Box mb={2} display="flex" justifyContent="flex-end">
+            <Box mb={2} display="flex" justifyContent="space-between">
+                <Button
+                    disabled={validLocations.length === 0}
+                    onClick={_ => {
+                        setLocations(old => 
+                            old.slice(0, 2)
+                            .map(loc => ({ id: loc.id }))
+                        )
+                        setRoute(null)
+                    }} 
+                >
+                    Clear All
+                </Button>
                 <Button
                     disabled={locations.some(loc => !loc.value)}
                     startIcon={<AddLocationIcon />}

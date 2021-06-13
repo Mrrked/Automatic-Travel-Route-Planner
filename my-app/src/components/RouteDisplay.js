@@ -14,7 +14,7 @@ function TimelineDisplay({ totalLabel, totalDisplay, values=[] }){
                 <TimelineItem key={index}>
                     {index !== 0 && <TimelineOppositeContent>
                         <Typography variant="subtitle2">
-                            {values[index]}
+                            {values?.[index]}
                         </Typography>
                     </TimelineOppositeContent>}
                     <TimelineSeparator>
@@ -72,14 +72,14 @@ export default function RouteDisplay(){
                 <TimelineDisplay 
                     totalLabel="Total Distance"
                     totalDisplay={formatDistance(totalDistance)}
-                    values={distances.map(distance => formatDistance(distance))}
+                    values={distances?.map(distance => formatDistance(distance))}
                 />
             </TabPanel>
             <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value={1}>
                 <TimelineDisplay 
                     totalLabel="Total Time"
                     totalDisplay={formatDuration(totalDuration)}
-                    values={durations.map(duration => formatDuration(duration))}
+                    values={durations?.map(duration => formatDuration(duration))}
                 />
             </TabPanel>
         </TabContext>
