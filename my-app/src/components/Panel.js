@@ -21,7 +21,7 @@ export default function Panel(){
         else setView("ROUTE_INPUT")
     }, [route])
 
-    return <Box zIndex={1} boxShadow={2} width={350} display="flex" flexDirection="column" alignSelf="stretch" component={Paper}>
+    return <Box zIndex={1} boxShadow={2} width={400} display="flex" flexDirection="column" alignSelf="stretch" component={Paper}>
         <Box boxShadow={1} p={3} color="primary.contrastText" bgcolor="primary.main">
             <Typography variant="h6" color="inherit">
                 Travel Route Planner

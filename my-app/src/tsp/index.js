@@ -1,4 +1,4 @@
-export function getRoute(graph, endPos=0, labels){
+export async function getRoute(graph, endPos=0, labels){
     //DECLARATION & INITIALIZATION OF NECESSARY INPUTS-----------------------------------------------
 
     const n = graph.length;                              //Required Input: # of nodes/locations

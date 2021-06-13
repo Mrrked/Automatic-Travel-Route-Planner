@@ -16,7 +16,7 @@ export default function AutocompleteField({onPlaceChanged, value="", ...props}){
                     onPlaceChanged?.({
                         value: null,
                         address: null,
-                        name: null
+                        name: null,
                     })
                 } else {
                     onPlaceChanged?.({
@@ -26,7 +26,7 @@ export default function AutocompleteField({onPlaceChanged, value="", ...props}){
                         },
                         address: place.formatted_address.includes(place.name) ?
                         place.formatted_address : `${place.name}, ${place.formatted_address}`,
-                        name: place.name
+                        name: place.name,
                     })
                 }
                 setTemp(null)

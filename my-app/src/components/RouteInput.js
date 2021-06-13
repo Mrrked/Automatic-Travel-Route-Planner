@@ -56,7 +56,7 @@ export default function RouteInput(){
                 alignItems="center"
                 justifyContent="space-between"
             >
-                <Box width={250} mr={1}>
+                <Box width={320} mr={1}>
                     <AutocompleteField
                         error={noStart && index === 0}
                         helperText={noStart && index === 0 && "Required"}

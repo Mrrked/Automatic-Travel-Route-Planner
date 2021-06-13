@@ -12,17 +12,45 @@ export default function Map({ mapContainerStyle }){
         setNotification, 
         locations, 
         matrix, 
-        setMatrix, 
         route,
-        fetchDistance,
-        setFetchDistance,
-        validLocations
+        validLocations,
+        shouldGetMatrix, setShouldGetMatrix,
+        setMatrix,
+        setIsLoading
     } = useContext(MainContext)
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
         lat: 14.599513,
         lng: 120.984222
     })
+    const [fetchDistance, setFetchDistance] = useState(false)
+    const [origin, setOrigin] = useState(0)
+
+    const interval = Math.floor(100 / validLocations.length)
+
+    const [tempMatrix, setTempMatrix] = useState([])
+
+    useEffect(_ => {
+        if (tempMatrix.length > 0 && tempMatrix.length === validLocations.length){
+            setMatrix(tempMatrix)
+            setTempMatrix([])
+            setOrigin(0)
+        }
+        // eslint-disable-next-line
+    }, [tempMatrix])
+    
+    useEffect(_ => {
+        if (shouldGetMatrix) {
+            setFetchDistance(true)
+            setTempMatrix([])
+        }
+    }, [shouldGetMatrix])
+
+    useEffect(_ => {
+        if (!fetchDistance && tempMatrix.length < validLocations.length)
+            setTimeout(_ => setFetchDistance(true), 5000)
+        // eslint-disable-next-line
+    }, [fetchDistance])
 
     useEffect(_ => {
         if (validLocations.length === 0) return
@@ -51,7 +79,7 @@ export default function Map({ mapContainerStyle }){
 
             handleAddLocation({
                 value: result.geometry.location,
-                address: result.formatted_address
+                address: result.formatted_address,
             })
         }}
     >
@@ -69,22 +97,39 @@ export default function Map({ mapContainerStyle }){
             validLocations={validLocations}
             travelMode="DRIVING"
         />
-        {fetchDistance && 
+        {shouldGetMatrix && fetchDistance &&
         <DistanceMatrixService
             key="distance_matrix" 
             options={{
                     travelMode: "DRIVING",
-                    origins: validLocations.map(loc => loc.value),
-                    destinations: validLocations.map(loc => loc.value),
+                    origins: validLocations.slice(origin, origin + interval).map(loc => loc.value),
+                    destinations: validLocations.map(loc => loc.value)
                 }}
-            callback={resp => {
+            callback={(resp, status) => {
                 setFetchDistance(false)   
-                if (!resp) return setNotification({text: "Something went wrong.", severity: "error"})
-                if (resp.rows.some(row => row.elements.some(element => element.status !== "OK" )))
+                console.log("Status: ", status)
+                if (!resp) return
+                
+                if (resp.rows.some(row => row.elements.some(element => element.status !== "OK" ))){
+                    setShouldGetMatrix(false)
+                    setTempMatrix([])
+                    setIsLoading(false)
                     return setNotification({text: "Unreachable location.", severity: "error"})
-                setMatrix(resp.rows.map(row =>
-                    row.elements.map(element => element.duration.value)
-                ))
+                }
+                const newData = [
+                    ...tempMatrix,
+                    ...resp.rows.map(row =>
+                        row.elements.map(element => element.duration.value)
+                    )
+                ]
+
+                const newOrigin = origin + interval
+                console.log(newData)
+
+                setTempMatrix(newData)
+                setOrigin(newOrigin)
+                
+                if (newOrigin > validLocations.length) setShouldGetMatrix(false)
             }}
         />}
     </GoogleMap>
