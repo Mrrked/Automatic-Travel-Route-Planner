@@ -1,22 +1,20 @@
-import { Box, Typography } from "@material-ui/core";
-import { Timeline, TimelineConnector, TimelineContent, TimelineItem, TimelineOppositeContent, TimelineSeparator } from "@material-ui/lab";
+import { Box, Tab, Typography } from "@material-ui/core";
+import { TabContext, TabList, TabPanel, Timeline, TimelineConnector, TimelineContent, TimelineItem, TimelineOppositeContent, TimelineSeparator } from "@material-ui/lab";
 import { MainContext } from "providers/Main";
-import { useContext } from "react";
-import { formatDuration } from "utils";
+import { useContext, useState } from "react";
+import { formatDuration, formatDistance } from "utils";
 
-export default function RouteDisplay(){
-    const { route, matrix, validLocations } = useContext(MainContext)
-    const durations = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node])
-    const totalDuration = durations?.reduce((acc, curr) => acc + curr)
-    
+function TimelineDisplay({ totalLabel, totalDisplay, values=[] }){
+    const { route, validLocations } = useContext(MainContext)
+
     return <Box>
-        <Typography><strong>Travel Time:</strong> {formatDuration(totalDuration)}</Typography>
+        <Typography><strong>{totalLabel}:</strong> {totalDisplay}</Typography>
         <Timeline>
             {route?.map((node, index) => 
                 <TimelineItem key={index}>
-                    {index !== 0 &&<TimelineOppositeContent>
+                    {index !== 0 && <TimelineOppositeContent>
                         <Typography variant="subtitle2">
-                            {formatDuration(durations[index])}
+                            {values[index]}
                         </Typography>
                     </TimelineOppositeContent>}
                     <TimelineSeparator>
@@ -47,5 +45,43 @@ export default function RouteDisplay(){
                 </TimelineItem>
             )}
         </Timeline>
+    </Box>
+}
+
+export default function RouteDisplay(){
+    const { route, matrix } = useContext(MainContext)
+    const durations = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].duration)
+    const distances = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].distance)
+    const totalDuration = durations?.reduce((acc, curr) => acc + curr)
+    const totalDistance = distances?.reduce((acc, curr) => acc + curr)
+
+    const [tab, setTab] = useState(0)
+    
+    return <Box>
+        <TabContext value={tab}>
+            <TabList 
+                centered
+                textColor="secondary"
+                indicatorColor="secondary"
+                onChange={(e, newValue) => setTab(newValue)}
+            >
+                <Tab label="Distance" />
+                <Tab label="Time" />
+            </TabList>
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value={0} >
+                <TimelineDisplay 
+                    totalLabel="Total Distance"
+                    totalDisplay={formatDistance(totalDistance)}
+                    values={distances.map(distance => formatDistance(distance))}
+                />
+            </TabPanel>
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value={1}>
+                <TimelineDisplay 
+                    totalLabel="Total Time"
+                    totalDisplay={formatDuration(totalDuration)}
+                    values={durations.map(duration => formatDuration(duration))}
+                />
+            </TabPanel>
+        </TabContext>
     </Box>
 }

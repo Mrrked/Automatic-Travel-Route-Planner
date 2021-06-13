@@ -10,3 +10,6 @@ humanizeDuration(
         round: true,
     }
 )
+export const formatDistance = (meters) =>
+meters < 1000 ? `${meters} m`
+: `${Math.round(meters / 1000 * 100) / 100} km`

@@ -48,7 +48,7 @@ export default function App() {
       if (validLocations.length < 2) return
   
       const endIndex = validLocations.findIndex(loc => loc.id === end)
-      const result = await tsp.getRoute(matrix, endIndex)
+      const result = await tsp.getRoute(matrix.map(row => row.map(element => element.duration)), endIndex)
   
       setRoute(result.path)
       setIsLoading(false)

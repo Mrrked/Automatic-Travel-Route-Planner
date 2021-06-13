@@ -116,17 +116,35 @@ export default function Map({ mapContainerStyle }){
                     setIsLoading(false)
                     return setNotification({text: "Unreachable location.", severity: "error"})
                 }
-                const newData = [
-                    ...tempMatrix,
-                    ...resp.rows.map(row =>
-                        row.elements.map(element => element.duration.value)
-                    )
-                ]
+
+                console.log(resp)
+
+                // const newData = [
+                //     ...tempMatrix,
+                //     ...resp.rows.map(row =>
+                //         row.elements.map(element => {
+                //             return {
+                //                 duration: element.duration.value,
+                //                 distance: element.distance.value
+                //             }
+                //         })
+                //     )
+                // ]
 
                 const newOrigin = origin + interval
-                console.log(newData)
+                // console.log(newData)
 
-                setTempMatrix(newData)
+                setTempMatrix(old => [
+                    ...old,
+                    ...resp.rows.map(row =>
+                        row.elements.map(element => {
+                            return {
+                                duration: element.duration.value,
+                                distance: element.distance.value
+                            }
+                        })
+                    )
+                ])
                 setOrigin(newOrigin)
                 
                 if (newOrigin > validLocations.length) setShouldGetMatrix(false)
