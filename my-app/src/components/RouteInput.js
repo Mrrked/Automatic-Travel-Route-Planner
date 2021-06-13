@@ -18,13 +18,13 @@ import AutocompleteField from "components/AutocompleteField";
 import { useContext, useEffect } from "react";
 import { MainContext } from "providers/Main";
 
-export default function RouteInput(){
+export default function RouteInput({ handleViewRoute }){
     const { 
         handleAddLocation, handleEditLocation, 
         noStart, 
         noEnd, setNoEnd, 
         end, setEnd, 
-        route, handleViewRoute, 
+        route, 
         locations, setLocations, 
         setRoute, handleGenerateRoute,
         validLocations
