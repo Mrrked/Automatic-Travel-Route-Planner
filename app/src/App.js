@@ -4,9 +4,17 @@ import { LoadScript } from "@react-google-maps/api";
 import {
   Backdrop,
   Box,
+  Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
   IconButton,
   Snackbar,
+  Checkbox,
+  Typography
 } from "@material-ui/core"
 import {
   Clear as ClearIcon,
@@ -18,11 +26,14 @@ import Map from "components/Map";
 import Panel from "components/Panel";
 import * as tsp from "tsp/index"
 import { MainContext } from "providers/Main";
+import useLocalStorage from "hooks/useLocalStorage";
 
 // eslint-disable-next-line
 const activated = "AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA"
 // eslint-disable-next-line
 const dummy = "AIzaSyDr-Sb2ICpI-9HRANMJBLIOEAzAHNNWjbk"
+
+const sizeToApprox = 10
 
 export default function App() {
   const [locations, setLocations] = useState([
@@ -40,6 +51,8 @@ export default function App() {
   const [destinations, setDestinations] = useState([])
   const [shouldGetMatrix, setShouldGetMatrix] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [openDialog, setOpenDialog] = useState(false)
+  const [showDialog, setShowDialog] = useLocalStorage("showDialog", true)
   
   const validLocations = getValidLocations(locations)
 
@@ -51,13 +64,10 @@ export default function App() {
       const endIndex = validLocations.findIndex(loc => loc.id === end)
 
       const result = await (
-        validLocations.length < 10
+        validLocations.length < sizeToApprox
         ? tsp.getRoute(matrix.map(row => row.map(element => element.duration)), endIndex)
         : tsp.getRouteApprox(matrix.map(row => row.map(element => element.duration)), endIndex)
       )
-
-      // const result = await tsp.getRouteApprox(matrix.map(row => row.map(element => element.duration)), endIndex)
-
   
       setRoute(result.path)
       setIsLoading(false)
@@ -92,6 +102,13 @@ export default function App() {
     setRoute(null)
   }
 
+  const generateRoute = () => {
+    setRoute(null)
+    setLocations(validLocations)
+    setShouldGetMatrix(true)
+    setIsLoading(true) 
+  }
+
   const handleGenerateRoute = () => {
     const newNoStart = !locations?.[0].value
     const newNoEnd = !end
@@ -103,10 +120,8 @@ export default function App() {
 
     if (newNoStart || newNoEnd || newNoDestination) return
 
-    setRoute(null)
-    setLocations(validLocations)
-    setShouldGetMatrix(true)
-    setIsLoading(true)    
+    if (validLocations.length >= sizeToApprox && showDialog) setOpenDialog(true)
+    else generateRoute()
   } 
 
   return <MainContext.Provider 
@@ -124,9 +139,38 @@ export default function App() {
       origin, setOrigin,
       destinations, setDestinations,
       shouldGetMatrix, setShouldGetMatrix,
-      isLoading, setIsLoading
+      isLoading, setIsLoading,
     }}
   >
+  <Dialog open={openDialog}>
+    <DialogTitle>Results may not be exact.</DialogTitle>
+    <DialogContent>
+      <Typography>
+        Due to the resource-intensive operations required to calculate routes, results for ten or more locations can only be approximated. 
+      </Typography>
+      <Box mt={2}>
+        <FormControlLabel 
+          checked={!showDialog}
+          onChange={e => setShowDialog(!e.target.checked)}
+          label="Don't show this message again"
+          control={<Checkbox size="small" />}   
+        />
+      </Box>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={_ => setOpenDialog(false)}>
+        Cancel
+      </Button>
+      <Button 
+        onClick={_ => {
+          setOpenDialog(false)
+          generateRoute()
+        }}
+      >
+        Continue
+      </Button>
+    </DialogActions>
+  </Dialog>
   <div style={{ height: "100%", display: "flex", flexDirection: "column"}}>
     <Box display="flex" height="100%">
       <LoadScript
