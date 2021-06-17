@@ -55,7 +55,7 @@ export default function RouteDisplay(){
     const totalDuration = durations?.reduce((acc, curr) => acc + curr)
     const totalDistance = distances?.reduce((acc, curr) => acc + curr)
 
-    const [tab, setTab] = useState(0)
+    const [tab, setTab] = useState("0")
     
     return <Box>
         <TabContext value={tab}>
@@ -65,17 +65,17 @@ export default function RouteDisplay(){
                 indicatorColor="secondary"
                 onChange={(e, newValue) => setTab(newValue)}
             >
-                <Tab label="Distance" />
-                <Tab label="Time" />
+                <Tab label="Distance" value="0" />
+                <Tab label="Time" value="1" />
             </TabList>
-            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value={0} >
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="0">
                 <TimelineDisplay 
                     totalLabel="Total Distance"
                     totalDisplay={formatDistance(totalDistance)}
                     values={distances?.map(distance => formatDistance(distance))}
                 />
             </TabPanel>
-            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value={1}>
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="1">
                 <TimelineDisplay 
                     totalLabel="Total Time"
                     totalDisplay={formatDuration(totalDuration)}

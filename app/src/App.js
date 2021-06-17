@@ -34,6 +34,7 @@ export default function App() {
   const [route, setRoute] = useState(null)
   const [notification, setNotification] = useState({ text: "", severity: "info" })
   const [noStart, setNoStart] = useState(false)
+  const [noDestination, setNoDestination] = useState(false)
   const [noEnd, setNoEnd] = useState(false)
   const [origin, setOrigin] = useState([])
   const [destinations, setDestinations] = useState([])
@@ -86,11 +87,13 @@ export default function App() {
   const handleGenerateRoute = () => {
     const newNoStart = !locations?.[0].value
     const newNoEnd = !end
+    const newNoDestination = validLocations.length < 2
     
     setNoStart(newNoStart)
     setNoEnd(newNoEnd)
+    setNoDestination(newNoDestination)
 
-    if (newNoStart || newNoEnd) return
+    if (newNoStart || newNoEnd || newNoDestination) return
 
     setRoute(null)
     setLocations(validLocations)
@@ -107,6 +110,7 @@ export default function App() {
       notification, setNotification,
       noStart, setNoStart,
       noEnd, setNoEnd,
+      noDestination, setNoDestination,
       handleAddLocation, handleEditLocation, handleGenerateRoute,
       validLocations,
       origin, setOrigin,
@@ -121,7 +125,7 @@ export default function App() {
         googleMapsApiKey={activated}
         libraries={libraries}
       >
-        <Backdrop style={{ zIndex: 2 }} in={isLoading}>
+        <Backdrop style={{ zIndex: 2 }} open={isLoading}>
           <CircularProgress />
         </Backdrop>
         <Panel/>
