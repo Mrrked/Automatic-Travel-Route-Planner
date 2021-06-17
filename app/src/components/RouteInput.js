@@ -22,7 +22,8 @@ export default function RouteInput({ handleViewRoute }){
     const { 
         handleAddLocation, handleEditLocation, 
         noStart, 
-        noEnd, setNoEnd, 
+        noEnd,
+        noDestination, 
         end, setEnd, 
         route, setRoute,
         locations, setLocations, 
@@ -70,8 +71,10 @@ export default function RouteInput({ handleViewRoute }){
             >
                 <Box width={320} mr={1}>
                     <AutocompleteField
-                        error={noStart && index === 0}
-                        helperText={noStart && index === 0 && "Required"}
+                        error={(noStart && index === 0) || (noDestination && index === 1)}
+                        helperText={
+                            ((noStart && index === 0) || (noDestination && index === 1)) && "Required"
+                        }
                         label={index === 0 ? "Start" : `Destination ${index}`}
                         onPlaceChanged={newLoc => handleEditLocation(location.id, newLoc)}
                         value={location?.address}
@@ -103,7 +106,6 @@ export default function RouteInput({ handleViewRoute }){
                         onChange={e => {
                             setEnd(e.target.value)
                             setRoute(null)
-                            setNoEnd(false)
                         }}
                     >
                         <MenuItem value="ANY">
@@ -127,7 +129,7 @@ export default function RouteInput({ handleViewRoute }){
             <Fab 
                 variant="extended" 
                 color="primary"
-                disabled={validLocations.length < 2}
+                // disabled={validLocations.length < 2}
                 onClick={handleGenerateRoute}
             >
                 <FindRouteIcon style={{ marginRight: 10 }} />
