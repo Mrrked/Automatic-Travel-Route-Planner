@@ -133,3 +133,109 @@ export async function getRoute(graph, endPos=0, labels){
         total: ans
     }
 }
+
+export async function getRouteApprox(graph, endPos=0, labels){
+    //DECLARATION & INITIALIZATION OF NECESSARY INPUTS-----------------------------------------------
+
+    let n = graph.length;                              //Required Input: # of nodes/locations
+
+    //Contains the nodes/location
+    // let nodes = Array(n);                   //Declare array to store nodes
+    //     nodes = ['A','B','C','D','E'];      //Required Input: Put nodes inside the array
+
+    // N x N Adj. Matrix
+   
+
+
+    //index of starting node: must be integer
+    //will be used as an counter later
+    let currPos = 0;                        //Constant: Index 0 will always be the starting array. Don't change
+
+                                            //Set to 0 to have a circular path which goes back to the start point
+                                            //Set to 1 to n, to have a linear path which ends on the selected end point
+                                            //Set to -1 to have a linear path which end anywhere, selecting the optimized path
+
+    //PROCESSING-------------------------------------------------------------------
+
+    let k = (currPos < endPos) ? n - 3 : n - 2 ;
+
+    //Stores the Final cost and path
+    let smallest_path = []
+    let min_ans = 999999999999999;
+
+    for(let z = 1; z < n; z++){
+    if( (endPos <= currPos) || (endPos > currPos && z !== endPos) ){
+        find_path(z);
+    }
+    }
+
+    function find_path(start)
+    {
+    let node_count = 2;
+    let t_cost = 0;
+
+    let v = Array(n).fill(false);
+    v[currPos] = true;
+    v[start] = true;
+
+    if(endPos > currPos){
+        v[endPos] = true;
+    }
+
+    let cur_path = []
+    cur_path[currPos] = currPos;
+    cur_path[1] = start;
+
+    t_cost += graph[currPos][start];
+
+    for(let i = 1; i <= k; i++)                      //Create path based on the nearest node.
+    {
+
+        let cost = 999999;
+        let index = 0;
+
+        for(let j = 0; j < n; j++)                    //Find lowest cost node among the available nodes
+        {
+        if(!v[j] && cost > graph[start][j])
+        {
+            cost = graph[start][j];
+            index = j;
+
+        }
+        }
+        start = index;
+        v[start] = true;
+        t_cost += cost;
+        cur_path[node_count++] = start;
+
+        if( i === k && endPos === currPos ){
+        cur_path[node_count] = 0;
+        t_cost += graph[start][0];
+        }else if(i === k && endPos > currPos){
+        cur_path[node_count] = endPos;
+        t_cost += graph[start][endPos];
+        }
+    }
+
+    if(min_ans > t_cost){
+        min_ans = t_cost;
+        smallest_path = cur_path.slice();
+    }
+
+
+    }
+
+    //OUTPUTS
+
+    // console.log(min_ans);                            //Holds the total minimum cost
+
+    // for(let i = 0; i < n+1; i++){
+    //     console.log(smallest_path[i] + " -> ");     //Holds the path
+    // }
+
+    return {
+        path: labels ? smallest_path.map(index => labels[index]) : smallest_path,
+        total: min_ans
+    }
+
+}
