@@ -25,33 +25,32 @@ export async function getRoute(graph, endPos=0, labels){
     tsp(graph, currPos, n, 1, 0);
 
     function tsp(graph, currPos, n, count, cost){
-        if(circular){
-            if (count === n && graph[currPos][0]) {
-                let total = cost + graph[currPos][0];
+        if(count == n){
+            if(circular  && graph[currPos][0]){
+                var total = cost + graph[currPos][0];
                 if(ans > total){
                     ans = total;
                     smallest_path = cur_path.slice();
                 }
                 return;
-            }
-        }else if(any){
-            if (count === n) {
-                let total = cost;
+            
+            }else if(any){
+                var total = cost;
+                console.log(total);
                 if(ans > total){
                     ans = total;
                     smallest_path = cur_path.slice();
                 }
                 return;
+            }  
+        }else if (count == n-1 && graph[currPos][endPos] && endPos > 0) {
+            var total = cost + graph[currPos][endPos];
+            console.log(total);
+            if(ans > total){
+                ans = total;
+                smallest_path = cur_path.slice();
             }
-        }else{
-            if (count === n-1 && graph[currPos][endPos]) {
-                let total = cost + graph[currPos][endPos];
-                if(ans > total){
-                    ans = total;
-                    smallest_path = cur_path.slice();
-                }
-                return;
-            }
+            return;
         }
 
         for (let i = 0; i < n; i++) {
@@ -64,6 +63,7 @@ export async function getRoute(graph, endPos=0, labels){
             }
         }
     }
+    
     return {
         path: labels ? smallest_path.map(index => labels[index]) : smallest_path,
         total: ans

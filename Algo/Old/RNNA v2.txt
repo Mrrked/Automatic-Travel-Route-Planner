@@ -39,8 +39,7 @@ for( z = 1; z < n; z++){
   }
 }
 
-function find_path(start)
-{
+function find_path(start){
   var node_count = 2;
   var t_cost = 0;
 
@@ -58,8 +57,7 @@ function find_path(start)
 
   t_cost += graph[currPos][start];
 
-  for(var i = 1; i <= k; i++)                      //Create path based on the nearest node.
-  {
+  for(var i = 1; i <= k; i++){                      //Create path based on the nearest node.
 
     cost = 999999;
     index = 0;

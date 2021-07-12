@@ -76,33 +76,32 @@ function tsp(graph, currPos, n, count, cost){
     // keep the minimum value out of the total cost
     // of traversal and "ans"
     // Finally return to check for more possible values
-    if(circular){
-        if (count == n && graph[currPos][0]) {
+    if(count == n){
+        if(circular  && graph[currPos][0]){
             var total = cost + graph[currPos][0];
             if(ans > total){
                 ans = total;
                 smallest_path = cur_path.slice();
             }
             return;
-        }
-    }else if(any){
-        if (count == n) {
+        
+        }else if(any){
             var total = cost;
+            console.log(total);
             if(ans > total){
                 ans = total;
                 smallest_path = cur_path.slice();
             }
             return;
+        }  
+    }else if (count == n-1 && graph[currPos][endPos]) {
+        var total = cost + graph[currPos][endPos];
+        console.log(total);
+        if(ans > total){
+            ans = total;
+            smallest_path = cur_path.slice();
         }
-    }else{
-        if (count == n-1 && graph[currPos][endPos]) {
-            var total = cost + graph[currPos][endPos];
-            if(ans > total){
-                ans = total;
-                smallest_path = cur_path.slice();
-            }
-            return;
-        }
+        return;
     }
 
 
