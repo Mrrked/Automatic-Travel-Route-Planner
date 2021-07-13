@@ -14,10 +14,12 @@ import {
   IconButton,
   Snackbar,
   Checkbox,
-  Typography
+  Typography,
+  Fab
 } from "@material-ui/core"
 import {
   Clear as ClearIcon,
+  Menu as MenuIcon
 } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
 import { libraries } from "config"
@@ -55,6 +57,8 @@ export default function App() {
   const [showDialog, setShowDialog] = useLocalStorage("showDialog", true)
   
   const validLocations = getValidLocations(locations)
+
+  const [openPanel, setOpenPanel] = useState(true)
 
   useEffect(_ => {
     (async function(){
@@ -140,6 +144,7 @@ export default function App() {
       destinations, setDestinations,
       shouldGetMatrix, setShouldGetMatrix,
       isLoading, setIsLoading,
+      openPanel, setOpenPanel
     }}
   >
   <Dialog open={openDialog}>
@@ -180,8 +185,15 @@ export default function App() {
         <Backdrop style={{ zIndex: 2 }} open={isLoading}>
           <CircularProgress />
         </Backdrop>
-        <Panel/>
-        <Map mapContainerStyle={{ flexGrow: 1 }}/>
+        {openPanel && <Panel/>}
+        <Box flexGrow={1}>
+          <Box style={{ position: "absolute", bottom: 0, padding: 5, zIndex: 5 }}>
+            <Fab color="primary" size="small" onClick={_ => setOpenPanel(old => !old)}>
+              <MenuIcon fontSize="small" />
+            </Fab>
+          </Box>
+          <Map mapContainerStyle={{ height: "100%", width: "100%"}}/>
+        </Box>
       </LoadScript>
     </Box>
     <Snackbar 
