@@ -2,7 +2,7 @@ import { DirectionsRenderer, DirectionsService } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 
 
-export default function Directions({ validLocations, matrix, route, travelMode, waypoints=[] }){
+export default function Directions({ display=false, validLocations, matrix, route, travelMode, waypoints=[] }){
   const [fetchDirections, setFetchDirections] = useState(false)
   const [response, setResponse] = useState(null)
 
@@ -32,7 +32,7 @@ export default function Directions({ validLocations, matrix, route, travelMode, 
           }
         }}
       />}
-      {response && <DirectionsRenderer 
+      {response && display && <DirectionsRenderer 
         options={{
           directions: response
         }}

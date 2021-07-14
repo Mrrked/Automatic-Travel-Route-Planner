@@ -15,14 +15,14 @@ export default function MatrixTable({ variant="distance" }){
                         <TableCell></TableCell>
                         {validLocations.map((loc, index) => 
                         <TableCell key={index} variant="head">
-                            {loc.name || loc.address.substring(0, 20) + "..."}
+                            {index}
                         </TableCell>
                         )}
                     </TableRow>
                     {matrix.map((row, index) => 
                     <TableRow key={index}>
                         <TableCell key={index} variant="head">
-                            {validLocations[index].name || validLocations[index].address.substring(0, 20) + "..."}
+                            {index}
                         </TableCell>
                         {row.map((data, index) =>
                         <TableCell key={index}>

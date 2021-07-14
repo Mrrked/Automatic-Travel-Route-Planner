@@ -15,7 +15,7 @@ import {
   Snackbar,
   Checkbox,
   Typography,
-  Fab
+  Fab,
 } from "@material-ui/core"
 import {
   Clear as ClearIcon,
@@ -55,6 +55,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [openDialog, setOpenDialog] = useState(false)
   const [showDialog, setShowDialog] = useLocalStorage("showDialog", true)
+  const [mapView, setMapView] = useState("ROUTE")
   
   const validLocations = getValidLocations(locations)
 
@@ -75,6 +76,7 @@ export default function App() {
   
       setRoute(result.path)
       setIsLoading(false)
+      setMapView("ROUTE")
     })()
     // eslint-disable-next-line
   }, [matrix])
@@ -144,7 +146,8 @@ export default function App() {
       destinations, setDestinations,
       shouldGetMatrix, setShouldGetMatrix,
       isLoading, setIsLoading,
-      openPanel, setOpenPanel
+      openPanel, setOpenPanel,
+      mapView, setMapView
     }}
   >
   <Dialog open={openDialog}>
@@ -186,10 +189,18 @@ export default function App() {
           <CircularProgress />
         </Backdrop>
         {openPanel && <Panel/>}
-        <Box flexGrow={1}>
+        <Box flexGrow={1} flexShrink={1}>
           <Box style={{ position: "absolute", bottom: 0, padding: 5, zIndex: 5 }}>
-            <Fab color="primary" size="small" onClick={_ => setOpenPanel(old => !old)}>
-              <MenuIcon fontSize="small" />
+            {route && <Box mb={1}>
+              <Fab 
+                variant="extended" 
+                color="secondary" 
+                onClick={_ => setMapView(old => old === "ROUTE" ? "GRAPH" : "ROUTE")}>
+                View {mapView === "ROUTE" ? "Graph" : "Route"}
+              </Fab>
+            </Box>}
+            <Fab color="primary" onClick={_ => setOpenPanel(old => !old)}>
+              <MenuIcon />
             </Fab>
           </Box>
           <Map mapContainerStyle={{ height: "100%", width: "100%"}}/>

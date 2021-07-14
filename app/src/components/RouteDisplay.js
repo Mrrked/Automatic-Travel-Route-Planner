@@ -50,7 +50,7 @@ function TimelineDisplay({ totalLabel, totalDisplay, values=[] }){
 }
 
 export default function RouteDisplay(){
-    const { route, matrix } = useContext(MainContext)
+    const { route, matrix, setMapView } = useContext(MainContext)
     const durations = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].duration)
     const distances = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].distance)
     const totalDuration = durations?.reduce((acc, curr) => acc + curr)
@@ -63,7 +63,11 @@ export default function RouteDisplay(){
             <TabList
                 textColor="secondary"
                 indicatorColor="secondary"
-                onChange={(e, newValue) => setTab(newValue)}
+                onChange={(e, newValue) => {
+                    setTab(newValue)
+                    if (newValue === "2" || newValue === "2")
+                        setMapView("GRAPH")
+                }}
                 variant="scrollable"
                 scrollButtons="on"
             >
