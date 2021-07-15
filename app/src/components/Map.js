@@ -55,25 +55,31 @@ export default function Map({ mapContainerStyle }){
         // eslint-disable-next-line
     }, [fetchDistance])
 
-    useEffect(_ => {
-        if (validLocations.length === 0) return
-        if (validLocations.length === 1) return setCenter(validLocations[0].value)
+    // useEffect(_ => {
+    //     if (validLocations.length === 0) return
+    //     if (validLocations.length === 1) return setCenter(validLocations[0].value)
 
-        const bounds = new window.google.maps.LatLngBounds()
+    //     const bounds = new window.google.maps.LatLngBounds()
 
-        validLocations.forEach(loc => {
-            bounds.extend(loc.value)
-        })
+    //     validLocations.forEach(loc => {
+    //         bounds.extend(loc.value)
+    //     })
     
-        map?.fitBounds(bounds)
+    //     map?.fitBounds(bounds)
 
-    }, [validLocations, map])
+    // }, [validLocations, map])
 
     return <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={11}
-        onLoad={map => setMap(map) }
+        options={{
+            // maxZoom: 5,
+            minZoom: 11
+        }}
+        onLoad={map => {
+            setMap(map)
+        }}
         onRightClick={async e => {
             const response = await Geocode.fromLatLng(String(e.latLng.lat()), String(e.latLng.lng()))
             if (response.status !== "OK") return console.log("not found")
