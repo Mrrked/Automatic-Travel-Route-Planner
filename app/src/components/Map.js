@@ -8,7 +8,8 @@ import Graph from "./Graph";
 
 Geocode.setApiKey("AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA")
 
-export default function Map({ mapContainerStyle }){
+
+export default function Map({ mapContainerStyle, autoFitBounds=false }){
     const { 
         handleAddLocation, 
         setNotification, 
@@ -55,19 +56,21 @@ export default function Map({ mapContainerStyle }){
         // eslint-disable-next-line
     }, [fetchDistance])
 
-    // useEffect(_ => {
-    //     if (validLocations.length === 0) return
-    //     if (validLocations.length === 1) return setCenter(validLocations[0].value)
+    useEffect(_ => {
+        if (!autoFitBounds) return
 
-    //     const bounds = new window.google.maps.LatLngBounds()
+        if (validLocations.length === 0) return
+        if (validLocations.length === 1) return setCenter(validLocations[0].value)
 
-    //     validLocations.forEach(loc => {
-    //         bounds.extend(loc.value)
-    //     })
+        const bounds = new window.google.maps.LatLngBounds()
+
+        validLocations.forEach(loc => {
+            bounds.extend(loc.value)
+        })
     
-    //     map?.fitBounds(bounds)
+        map?.fitBounds(bounds)
 
-    // }, [validLocations, map])
+    }, [validLocations, map, autoFitBounds])
 
     return <GoogleMap
         mapContainerStyle={mapContainerStyle}
