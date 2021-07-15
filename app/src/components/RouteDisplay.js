@@ -3,6 +3,7 @@ import { TabContext, TabList, TabPanel, Timeline, TimelineConnector, TimelineCon
 import { MainContext } from "providers/Main";
 import { useContext, useState } from "react";
 import { formatDuration, formatDistance } from "utils";
+import MatrixTable from "./MatrixTable";
 
 function TimelineDisplay({ totalLabel, totalDisplay, values=[] }){
     const { route, validLocations } = useContext(MainContext)
@@ -49,7 +50,7 @@ function TimelineDisplay({ totalLabel, totalDisplay, values=[] }){
 }
 
 export default function RouteDisplay(){
-    const { route, matrix } = useContext(MainContext)
+    const { route, matrix, setMapView } = useContext(MainContext)
     const durations = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].duration)
     const distances = route?.map((node, index, arr) => index === 0 ? 0 : matrix[arr[index-1]][node].distance)
     const totalDuration = durations?.reduce((acc, curr) => acc + curr)
@@ -59,14 +60,21 @@ export default function RouteDisplay(){
     
     return <Box>
         <TabContext value={tab}>
-            <TabList 
-                centered
+            <TabList
                 textColor="secondary"
                 indicatorColor="secondary"
-                onChange={(e, newValue) => setTab(newValue)}
+                onChange={(e, newValue) => {
+                    setTab(newValue)
+                    if (newValue === "2" || newValue === "2")
+                        setMapView("GRAPH")
+                }}
+                variant="scrollable"
+                scrollButtons="on"
             >
-                <Tab label="Distance" value="0" />
-                <Tab label="Time" value="1" />
+                <Tab style={{ minWidth: 70 }} label="Distance" value="0" />
+                <Tab style={{ minWidth: 70 }} label="Time" value="1" />
+                <Tab style={{ minWidth: 70 }} label="Distance Matrix" value="2" />
+                <Tab style={{ minWidth: 70 }} label="Time Matrix" value="3" />
             </TabList>
             <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="0">
                 <TimelineDisplay 
@@ -81,6 +89,12 @@ export default function RouteDisplay(){
                     totalDisplay={formatDuration(totalDuration)}
                     values={durations?.map(duration => formatDuration(duration))}
                 />
+            </TabPanel>
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="2">
+                <MatrixTable />
+            </TabPanel>
+            <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="3">
+                <MatrixTable variant="duration" />
             </TabPanel>
         </TabContext>
     </Box>

@@ -14,10 +14,12 @@ import {
   IconButton,
   Snackbar,
   Checkbox,
-  Typography
+  Typography,
+  Fab,
 } from "@material-ui/core"
 import {
   Clear as ClearIcon,
+  Menu as MenuIcon
 } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
 import { libraries } from "config"
@@ -53,8 +55,11 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [openDialog, setOpenDialog] = useState(false)
   const [showDialog, setShowDialog] = useLocalStorage("showDialog", true)
+  const [mapView, setMapView] = useState("ROUTE")
   
   const validLocations = getValidLocations(locations)
+
+  const [openPanel, setOpenPanel] = useState(true)
 
   useEffect(_ => {
     (async function(){
@@ -71,6 +76,7 @@ export default function App() {
   
       setRoute(result.path)
       setIsLoading(false)
+      setMapView("ROUTE")
     })()
     // eslint-disable-next-line
   }, [matrix])
@@ -140,6 +146,8 @@ export default function App() {
       destinations, setDestinations,
       shouldGetMatrix, setShouldGetMatrix,
       isLoading, setIsLoading,
+      openPanel, setOpenPanel,
+      mapView, setMapView
     }}
   >
   <Dialog open={openDialog}>
@@ -180,8 +188,23 @@ export default function App() {
         <Backdrop style={{ zIndex: 2 }} open={isLoading}>
           <CircularProgress />
         </Backdrop>
-        <Panel/>
-        <Map mapContainerStyle={{ flexGrow: 1 }}/>
+        {openPanel && <Panel/>}
+        <Box flexGrow={1} flexShrink={1}>
+          <Box style={{ position: "absolute", bottom: 0, padding: 5, zIndex: 5 }}>
+            {route && <Box mb={1}>
+              <Fab 
+                variant="extended" 
+                color="secondary" 
+                onClick={_ => setMapView(old => old === "ROUTE" ? "GRAPH" : "ROUTE")}>
+                View {mapView === "ROUTE" ? "Graph" : "Route"}
+              </Fab>
+            </Box>}
+            <Fab color="primary" onClick={_ => setOpenPanel(old => !old)}>
+              <MenuIcon />
+            </Fab>
+          </Box>
+          <Map mapContainerStyle={{ height: "100%", width: "100%"}}/>
+        </Box>
       </LoadScript>
     </Box>
     <Snackbar 

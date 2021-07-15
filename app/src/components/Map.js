@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react"
-import { DistanceMatrixService, GoogleMap, Marker } from "@react-google-maps/api";
+import { DistanceMatrixService, GoogleMap } from "@react-google-maps/api";
 import Directions from "components/Directions";
 import Geocode from "react-geocode"
 import { MainContext } from "providers/Main";
+import Markers from "./Markers";
+import Graph from "./Graph";
 
 Geocode.setApiKey("AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA")
 
@@ -16,7 +18,8 @@ export default function Map({ mapContainerStyle }){
         validLocations,
         shouldGetMatrix, setShouldGetMatrix,
         setMatrix,
-        setIsLoading
+        setIsLoading,
+        mapView
     } = useContext(MainContext)
     const [map, setMap] = useState(null)
     const [center, setCenter] = useState({
@@ -52,25 +55,31 @@ export default function Map({ mapContainerStyle }){
         // eslint-disable-next-line
     }, [fetchDistance])
 
-    useEffect(_ => {
-        if (validLocations.length === 0) return
-        if (validLocations.length === 1) return setCenter(validLocations[0].value)
+    // useEffect(_ => {
+    //     if (validLocations.length === 0) return
+    //     if (validLocations.length === 1) return setCenter(validLocations[0].value)
 
-        const bounds = new window.google.maps.LatLngBounds()
+    //     const bounds = new window.google.maps.LatLngBounds()
 
-        validLocations.forEach(loc => {
-            bounds.extend(loc.value)
-        })
+    //     validLocations.forEach(loc => {
+    //         bounds.extend(loc.value)
+    //     })
     
-        map?.fitBounds(bounds)
+    //     map?.fitBounds(bounds)
 
-    }, [validLocations, map])
+    // }, [validLocations, map])
 
     return <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={11}
-        onLoad={map => setMap(map) }
+        options={{
+            // maxZoom: 5,
+            minZoom: 11
+        }}
+        onLoad={map => {
+            setMap(map)
+        }}
         onRightClick={async e => {
             const response = await Geocode.fromLatLng(String(e.latLng.lat()), String(e.latLng.lng()))
             if (response.status !== "OK") return console.log("not found")
@@ -83,15 +92,18 @@ export default function Map({ mapContainerStyle }){
             })
         }}
     >
-        {!route && locations.map((location, index) =>
+        {!route && <Markers locations={locations} />}
+        {route && mapView === "GRAPH" && <Graph />}
+        {/* {!route && locations.map((location, index) =>
         location.value && 
         <Marker 
             key={location.id}
             position={location.value}
             label={index === 0 ? "S" : `${index}`}
         />
-        )}
+        )} */}
         <Directions 
+            display={mapView === "ROUTE"}
             matrix={matrix}
             route={route}
             validLocations={validLocations}

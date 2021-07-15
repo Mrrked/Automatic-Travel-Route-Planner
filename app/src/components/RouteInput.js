@@ -75,7 +75,7 @@ export default function RouteInput({ handleViewRoute }){
                         helperText={
                             ((noStart && index === 0) || (noDestination && index === 1)) && "Required"
                         }
-                        label={index === 0 ? "Start" : `Destination ${index}`}
+                        label={(index === 0 ? "Start (0)" : `Destination (${index})`)}
                         onPlaceChanged={newLoc => handleEditLocation(location.id, newLoc)}
                         value={location?.address}
                     />

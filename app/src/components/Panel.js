@@ -3,9 +3,11 @@ import {
     Button,
     Paper,
     Typography,
+    IconButton
 } from "@material-ui/core"
 import {
-    ArrowBack as BackIcon
+    ArrowBack as BackIcon,
+    Clear as ClearIcon
 } from "@material-ui/icons"
 import RouteInput from "components/RouteInput"
 import { MainContext } from "providers/Main"
@@ -14,15 +16,18 @@ import RouteDisplay from "./RouteDisplay"
 
 export default function Panel(){
     const [view, setView] = useState("ROUTE_INPUT")
-    const { route } = useContext(MainContext)
+    const { route, setOpenPanel } = useContext(MainContext)
 
     useEffect(_ => {
         if (route) setView("ROUTE_DISPLAY")
         else setView("ROUTE_INPUT")
     }, [route])
 
-    return <Box zIndex={1} boxShadow={2} width={400} display="flex" flexDirection="column" alignSelf="stretch" component={Paper}>
+    return <Box zIndex={1} boxShadow={2} minWidth={400} display="flex" flexDirection="column" alignSelf="stretch" component={Paper}>
         <Box boxShadow={1} p={3} color="primary.contrastText" bgcolor="primary.main">
+            <IconButton style={{ float: "right" }} size="small" onClick={_ => setOpenPanel(false)}>
+                <ClearIcon fontSize="small" />
+            </IconButton>
             <Typography variant="h6" color="inherit">
                 Travel Route Planner
             </Typography>
