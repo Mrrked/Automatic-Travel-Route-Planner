@@ -1,28 +1,22 @@
 # Travel Route Planner: 
 ## Application of Travelling Salesman Problem using Brute Force and Heuristic approach with Google Maps API
 
-### Travelling Salesman Problem : Optimization Problem - Find the Most Optimal ORDER with least cost
+### Travelling Salesman Problem 
 
-##### Symmetric Travelling Salesman Problem
+* An Optimization Problem which aims to find the most OPTIMAL TOUR / ORDER with least cost
 
-![alt text](https://github.com/MrYious/Automatic-Travel-Route-Planner/blob/main/images/STSP.PNG)
-
-##### Asymmetric Travelling Salesman Problem - (SELECTED) Road Directions
+##### Asymmetric TSP - Road Directions
 
 ![alt text](https://github.com/MrYious/Automatic-Travel-Route-Planner/blob/main/images/ATSP.PNG)
 
-### Algorithms
+### Implemented Algorithms 
 
-* Brute Force -> O(n!)
-* Heuristic: Repetitive Nearest Neighbor -> O(n^3)
+* N <= 10: Brute Force -> O(n!)
+* N  > 10: Heuristic: Repetitive Nearest Neighbor -> O(n^3)
 
-### Website 
+### Source Code of the Application 
 
-* https://travel-route-planner-315906.web.app/
-
-### Source Code
-
-* https://github.com/MrYious/Automatic-Travel-Route-Planner
+* Automatic-Travel-Route-Planner/app
 
 ### **COURSE**: 
 * Design and Analysis of Algorithms
