@@ -1,13 +1,15 @@
-import { useContext, useEffect, useState } from "react"
 import { DistanceMatrixService, GoogleMap } from "@react-google-maps/api";
+import { useContext, useEffect, useState } from "react"
+
 import Directions from "components/Directions";
 import Geocode from "react-geocode"
+import Graph from "./Graph";
 import { MainContext } from "providers/Main";
 import Markers from "./Markers";
-import Graph from "./Graph";
 
-Geocode.setApiKey("AIzaSyDPCx-DR57YVb-1pYfEwi9EsvWUqLWMKmA")
-
+Geocode.setApiKey("")
+// 1pYfEwi9EsvWUqLWMKmA
+// AIzaSyDPCx-DR57YVb-
 
 export default function Map({ mapContainerStyle, autoFitBounds=false }){
     const { 
